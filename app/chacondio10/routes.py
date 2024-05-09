@@ -1,25 +1,35 @@
-from fastapi import APIRouter, Body, Path, Request
+from fastapi import APIRouter, Body, Path, Query, Request
 
 from .protocol import transmit
 
 router = APIRouter(prefix="/chacondio10", tags=["chacondio10"])
 
-@router.get("/{sender}/{button}")
-async def get_button(request: Request, sender: int = Path(ge=0, le=67108863), button: int = Path(ge=0, le=15)):
-  if sender in request.app.state.chacondio10 and button in request.app.state.chacondio10[sender]:
-    return request.app.state.chacondio10[sender][button]
-  else:
-    return 0
 
-@router.put("/{sender}/{button}")
-async def put_button(request: Request, sender: int = Path(ge=0, le=67108863), button: int = Path(ge=0, le=15), onoff: int = Body(ge=0, le=1), repeat: int = 5):
-  if not sender in request.app.state.chacondio10:
-    request.app.state.chacondio10[sender] = {}
-  if onoff > 0:
-    request.app.state.chacondio10[sender][button] = 1
-    for i in range(repeat):
-      transmit(request.app.state.gpio, sender, False, button, True)
-  else:
-    request.app.state.chacondio10[sender][button] = 0
-    for i in range(repeat):
-      transmit(request.app.state.gpio, sender, False, button, False)
+@router.get("/{sender}/{button}", summary="Get button state")
+async def get_button(request: Request, sender: int = Path(ge=0, le=67108863), button: int = Path(ge=0, le=15)):
+    """Get the current state of a button for a given sender"""
+    if sender in request.app.state.chacondio10 and button in request.app.state.chacondio10[sender]:
+        return request.app.state.chacondio10[sender][button]
+    else:
+        return 0
+
+
+@router.put("/{sender}/group", summary="Set group state")
+async def put_group(request: Request, sender: int = Path(ge=0, le=67108863), onoff: int = Body(ge=0, le=1), repeat: int = Query(default=5, ge=0)):
+    """Set the state of the entire group (all buttons) for a given sender"""
+    if not sender in request.app.state.chacondio10:
+        request.app.state.chacondio10[sender] = {}
+    for button in range(16):
+        request.app.state.chacondio10[sender][button] = onoff
+    for _ in range(repeat):
+        transmit(request.app.state.gpio, sender, True, 0, bool(onoff))
+
+
+@router.put("/{sender}/{button}", summary="Set button state")
+async def put_button(request: Request, sender: int = Path(ge=0, le=67108863), button: int = Path(ge=0, le=15), onoff: int = Body(ge=0, le=1), repeat: int = Query(default=5, ge=0)):
+    """Set the state of a button for a given sender"""
+    if not sender in request.app.state.chacondio10:
+        request.app.state.chacondio10[sender] = {}
+    request.app.state.chacondio10[sender][button] = onoff
+    for _ in range(repeat):
+        transmit(request.app.state.gpio, sender, False, button, bool(onoff))
