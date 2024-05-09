@@ -6,6 +6,7 @@ from contextlib import asynccontextmanager
 
 import odroid_wiringpi as wiringpi
 import uvicorn
+from chacon54662.routes import router as chacon54662_router
 from chacondio10.routes import router as chacondio10_router
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
@@ -22,8 +23,10 @@ async def lifespan(app: FastAPI):
     yield
 
 app = FastAPI(title="Remote Control REST API", description="REST API to use an RF 433 MHz transmitter as a remote control", version="1.0", lifespan=lifespan)
+app.include_router(chacon54662_router)
 app.include_router(chacondio10_router)
 app.state.gpio = 0
+app.state.chacon54662 = {}
 app.state.chacondio10 = {}
 
 

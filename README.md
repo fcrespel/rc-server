@@ -1,6 +1,6 @@
 # Remote Control REST API
 
-REST API to use an RF 433 MHz transmitter as a remote control. It currently only supports the Chacon DIO 1.0 protocol.
+REST API to use an RF 433 MHz transmitter as a remote control. It currently only supports the Chacon DIO 1.0 and Chacon 54662 protocols.
 
 It has only been tested on an ODROID-C4 board and uses an ODROID-specific WiringPi version. It should be easy to adapt it for other boards (e.g. Raspberry Pi).
 
