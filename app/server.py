@@ -22,7 +22,7 @@ async def lifespan(app: FastAPI):
     wiringpi.pinMode(app.state.gpio, wiringpi.OUTPUT)
     yield
 
-app = FastAPI(title="Remote Control REST API", description="REST API to use an RF 433 MHz transmitter as a remote control", version="1.0", lifespan=lifespan)
+app = FastAPI(title="RF433 REST API", description="REST API to use an RF 433 MHz transmitter as a remote control", version="1.0", lifespan=lifespan)
 app.include_router(chacon54662_router)
 app.include_router(chacondio10_router)
 app.state.gpio = 0

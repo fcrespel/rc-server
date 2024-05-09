@@ -1,4 +1,4 @@
-# Remote Control REST API
+# RF433 REST API
 
 REST API to use an RF 433 MHz transmitter as a remote control. It currently only supports the Chacon DIO 1.0 and Chacon 54662 protocols.
 
@@ -43,23 +43,23 @@ Optional arguments:
 A Docker image is also available for the arm64 architecture:
 
 ```
-docker run -it --rm --privileged -p 8001:8001 ghcr.io/fcrespel/rc-server:master [-h] [-a ADDRESS] [-p PORT] [-g GPIO] [-l LOG_LEVEL]
+docker run -it --rm --privileged -p 8001:8001 ghcr.io/fcrespel/rf433-api:master [-h] [-a ADDRESS] [-p PORT] [-g GPIO] [-l LOG_LEVEL]
 ```
 
 You may want to run it in the background using commands such as the following:
 
 ```
 # Create and start container
-docker run -d --name rc-server --privileged -p 127.0.0.1:8001:8001 ghcr.io/fcrespel/rc-server:master
+docker run -d --name rf433-api --privileged -p 127.0.0.1:8001:8001 ghcr.io/fcrespel/rf433-api:master
 
 # Stop server
-docker stop rc-server
+docker stop rf433-api
 
 # Start server
-docker start rc-server
+docker start rf433-api
 
 # Show live logs
-docker logs -f rc-server
+docker logs -f rf433-api
 ```
 
 NOTE: the API port is not secured, make sure to only expose it locally or to trusted clients.
