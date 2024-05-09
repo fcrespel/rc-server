@@ -4,6 +4,8 @@ import odroid_wiringpi as wiringpi
 
 from .protocol import transmit
 
+__all__ = ["main"]
+
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Chacon DIO 1.0 remote control")

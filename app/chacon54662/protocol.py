@@ -1,5 +1,7 @@
 import odroid_wiringpi as wiringpi
 
+__all__ = ["transmit"]
+
 TIME_HIGH_LOCK = 290
 TIME_LOW_LOCK = 2400
 
@@ -10,7 +12,7 @@ TIME_HIGH_1 = 290
 TIME_LOW_1 = 1250
 
 
-def sendBit(pin: int, b: bool):
+def send_bit(pin: int, b: bool):
     if b:
         wiringpi.digitalWrite(pin, wiringpi.HIGH)
         wiringpi.delayMicroseconds(TIME_HIGH_1)
@@ -23,18 +25,18 @@ def sendBit(pin: int, b: bool):
         wiringpi.delayMicroseconds(TIME_LOW_0)
 
 
-def sendWord(pin: int, word: int, bits: int):
+def send_word(pin: int, word: int, bits: int):
     for bit in reversed(range(bits)):
         if word & (1 << bit):
-            sendBit(pin, True)
+            send_bit(pin, True)
         else:
-            sendBit(pin, False)
+            send_bit(pin, False)
 
 
 def transmit(pin: int, word: int):
     for _ in range(4):
         # Code word (24 bits)
-        sendWord(pin, word, 24)
+        send_word(pin, word, 24)
 
         # End lock
         wiringpi.digitalWrite(pin, wiringpi.HIGH)

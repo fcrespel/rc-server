@@ -2,6 +2,8 @@ from fastapi import APIRouter, Body, Path, Query, Request
 
 from .protocol import transmit
 
+__all__ = ["router"]
+
 router = APIRouter(prefix="/chacondio10", tags=["chacondio10"])
 
 
